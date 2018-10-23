@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "vector": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "chrono": "cpp",
+        "deque": "cpp",
+        "ctime": "cpp",
+        "iostream": "cpp"
     }
 }

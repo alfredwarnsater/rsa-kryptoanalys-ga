@@ -1,10 +1,3 @@
-#include <gmpxx.h>
-#include <vector>
-#include <cmath>
-#include <iostream>
-#include <string>
-#include "misc.h"
-
 mpz_vector fermat_factor(mpz_class n){
     mpz_vector factors;
 

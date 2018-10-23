@@ -1,4 +1,11 @@
 #include "testHeader.h"
+#include <gmpxx.h>
+#include <vector>
+#include <cmath>
+#include <iostream>
+#include <string>
+#include <ctime>
+#include <chrono>
 
 // Sloppy coding
 // Return a list of primes
@@ -51,10 +58,13 @@ vb_pair factor_smooth(mpz_class n, const mpz_vector &factor_base)
 
 // ------------------------------------------------
 
-int main()
+int start_qs()
 {
+
+
+
     // Test numbers: 502560280658509, 90283
-    const mpz_class n("123123123123123123123");
+    const mpz_class n("7272063971379531911413");
 
     int_vector primes = eratosthenes(TRIAL_BOUND);
     mpz_vector factor_base;
@@ -278,6 +288,7 @@ int main()
 
     std::cout << "Factor 1: " << factor_1 << '\n';
     std::cout << "Factor 2: " << factor_2 << '\n';
+
 
     return 0;
 }

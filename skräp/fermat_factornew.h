@@ -1,12 +1,6 @@
-#include <gmpxx.h>
-#include <vector>
-#include <cmath>
-#include <iostream>
-#include <string>
-#include "misc.h"
 
-mpzt_vector fermat_factor(mpz_class n){
-    mpzt_vector factors;
+/*
+void fermat_factornew(mpz_class n){
     mpz_t nnew, a, b_squared, tmp;
     mpz_init2(a, 200);
     mpz_init2(b_squared, 200);
@@ -21,9 +15,9 @@ mpzt_vector fermat_factor(mpz_class n){
     mpz_sub(b_squared, b_squared, nnew);
 
 
-    /*mpz_t a = sqrt(n-1)+1;
+    mpz_t a = sqrt(n-1)+1;
     mpz_t b_squared = a*a - n;
-    mpz_t tmp;*/
+    mpz_t tmp;
 
 
 
@@ -33,23 +27,22 @@ mpzt_vector fermat_factor(mpz_class n){
         mpz_add_ui(a, a, 1);
         mpz_mul(tmp, a, a);
         mpz_sub(b_squared, tmp, nnew);
-        /*a = a + 1;
+        a = a + 1;
         tmp = a*a;
-        b_squared = tmp - n;*/
+        b_squared = tmp - n;
 
         mpz_sqrt(tmp, b_squared);
         mpz_mul(tmp, tmp, tmp);
-        mpz_add_ui(count, count, 1);
         
     }
     
-    std::cout << count << std::endl;
     mpz_t tp;
     mpz_init(tp);
     mpz_sqrt(b_squared, b_squared);
     mpz_sub(tp, a, b_squared);
-    std::cout << tp << std::endl;
+    std::cout << tp << " ";
     mpz_add(tp, a, b_squared);
     std::cout << tp << std::endl;
-    return factors;
+    
 }
+*/
