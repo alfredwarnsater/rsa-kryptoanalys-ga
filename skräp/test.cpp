@@ -1,8 +1,5 @@
 #include "testHeader.h"
 
-
-
-
 // Sloppy coding
 // Return a list of primes
 int_vector eratosthenes(int bound)
@@ -57,7 +54,7 @@ vb_pair factor_smooth(mpz_class n, const mpz_vector &factor_base)
 int main()
 {
     // Test numbers: 502560280658509, 90283
-    const mpz_class n("1813");
+    const mpz_class n("123123123123123123123");
 
     int_vector primes = eratosthenes(TRIAL_BOUND);
     mpz_vector factor_base;
