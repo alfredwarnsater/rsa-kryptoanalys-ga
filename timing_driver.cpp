@@ -21,14 +21,14 @@ long long getTime(){
 int main(){
     // 515951277762010710181 (70 bits)
 
-    mpz_class b = randomPrime(38, 12318236)*randomPrime(38, 12312312);
-    std::cout << b << std::endl;
+    //mpz_class b = randomPrime(38, 12318236)*randomPrime(38, 12312312);
+    //std::cout << b << std::endl;
     //std::string a;
     //std::cin >> a;
     //mpz_class b(a);
-
+    mpz_class b("27281976717628902959");
     long long beforeTime = getTime();
-    mpz_vector abc = fermat_factor(b);
+    mpz_vector abc = trial_division(b);
     long long afterTime = getTime();
     print_vector(abc);
     cout << (afterTime - beforeTime) / 1000.0 << endl; 
