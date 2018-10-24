@@ -1,5 +1,6 @@
 #include "trial_divison.h"
 #include "fermat_factor.h"
+#include "rsa_nums_200.h"
 #include <gmpxx.h>
 #include <vector>
 #include <cmath>
@@ -21,17 +22,16 @@ long long getTime(){
 int main(){
     // 515951277762010710181 (70 bits)
 
-    //mpz_class b = randomPrime(38, 12318236)*randomPrime(38, 12312312);
-    //std::cout << b << std::endl;
-    //std::string a;
-    //std::cin >> a;
-    //mpz_class b(a);
-    mpz_class b("27281976717628902959");
-    long long beforeTime = getTime();
-    mpz_vector abc = trial_division(b);
-    long long afterTime = getTime();
-    print_vector(abc);
-    cout << (afterTime - beforeTime) / 1000.0 << endl; 
+    std::cout << rsa_nums[190][2] << endl;
+
+    for(int i = 0; i < 90; i++){
+        mpz_class b(rsa_nums[i][2]);
+        long long beforeTime = getTime();
+        trial_division(b);
+        long long afterTime = getTime();
+        cout << 10+i << "\t" << (afterTime - beforeTime) / 1000.0 << endl; 
+    }
+
 
 
 }
