@@ -7,11 +7,7 @@
 
 #include "utils.h"
 
-typedef std::vector<int> int_vector;
-typedef std::vector<bool> bool_vector;
-typedef std::vector<int_vector> int_matrix;
-typedef std::vector<mpz_class> mpz_vector;
-typedef std::pair<int_vector, bool> vb_pair;
+
 
 int_vector sieve_of_eratosthenes(int n){
     bool_vector a(n+1, true);
@@ -65,6 +61,8 @@ vb_pair factor_smooth(mpz_class n, const int_vector &factor_base, const int &fac
     return r;
 }
 
+mpz_class n("143");
+
 size_t get_optimal_fb_size(mpz_class n){
     double bound = mpz_sizeinbase(n.get_mpz_t(), 10) - 1; 
     bound = bound*log10(bound);
@@ -74,56 +72,63 @@ size_t get_optimal_fb_size(mpz_class n){
     return ret;
 }
 
+mpz_class get_factors(int_matrix solutions, const int_vector &factor_base, const mpz_vector &right, const mpz_vector &left){
+    int solution_count = solutions.size();
+    mpz_class a, b;
+    a = 1;
+    b = 1;
+    for(int i = 0; i < solution_count; i++){
+        for(int j = 0; j < factor_base.size(); j++){
+            if(solutions[i][j]){
+                a = a * left[j];
+                b = b * right[j];
+            }
+        }
+        std::cout << gcd(sqrt(a)-sqrt(b), n)  << " " << gcd(sqrt(a)+sqrt(b), n) << std::endl;
+    }
+
+    
+
+}
+
 mpz_vector dixons(mpz_class n){
 
-    size_t optimal_fb_size = get_optimal_fb_size(n)*4;
-    std::cout << "optimal_fb_size " << optimal_fb_size << std::endl;
+    size_t optimal_fb_size = 4*get_optimal_fb_size(n);
+    //std::cout << "optimal_fb_size " << optimal_fb_size << std::endl;
 
     int_vector factor_base = generate_primes(optimal_fb_size);
     
     int factor_base_size = factor_base.size();
-    std::cout << "factor_base_size: " << factor_base_size << std::endl << "factor_base: ";
-    print_vector(factor_base);
+    //std::cout << "factor_base_size: " << factor_base_size << std::endl << "factor_base: ";
+    //print_vector(factor_base);
 
     int i = 0;
     mpz_class z, z_squared, z_squared_mod_n;
     mpz_vector left;
-    int_matrix right;
+    mpz_vector right;
+    int_matrix right_exp;
 
     while(i < factor_base_size + 1){
         z = get_random_number(n);
-        //std::cout << z << std::endl;
         z_squared = z*z;
         z_squared_mod_n = z_squared % n;
         vb_pair fs = factor_smooth(z_squared_mod_n, factor_base, factor_base_size);
         if(fs.second){
             left.push_back(z_squared);
-            right.push_back(fs.first);
+            right.push_back(z_squared_mod_n);
+            right_exp.push_back(fs.first);
             i++;
-            //std::cout << i << std::endl;
         }
     }
 
-    print_vector(left);
+    int_matrix solutions = gaussElim(right_exp);
+/*     print_vector(left);
+    print_vector(right);
+    print_matrix(solutions); */
+    get_factors(solutions, factor_base, right, left);
 
 
     mpz_vector ret;
     return ret;
 
-}
-
-int main(){
-
-
-    init_random();
-    mpz_class testing_number("27281976717628902959");
-    long long bt = get_time_millis();
-    std::cout << bt << std::endl;
-    dixons(testing_number);
-    long long at = get_time_millis();
-
-
-
-    std::cout << (at - bt) / 1000.0 << std::endl;    
-    return 0;
 }
