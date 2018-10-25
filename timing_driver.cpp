@@ -1,7 +1,5 @@
-#include "trial_divison.h"
-#include "fermat_factor.h"
-#include "rsa_nums_200.h"
-#include "dixons.h"
+
+
 #include <gmpxx.h>
 #include <vector>
 #include <cmath>
@@ -10,25 +8,40 @@
 #include <ctime>
 #include <chrono>
 
-using namespace std;
-using namespace std::chrono;
+#include "trial_divison.h"
+#include "fermat_factor.h"
+#include "rsa_numbers/rsa_nums_200.h"
+#include "dixons.h"
 
-long long getTime(){
-    return duration_cast< milliseconds >(
-    system_clock::now().time_since_epoch()
-    ).count();
-}
-	
+int main(int argc, char *argv[]){
 
+    std::string inputnum = "8603856411671";
+    std::string algorithm_choice = "DIXON";
+    if(argc >= 2) inputnum = argv[1];
+    if(argc >= 3) algorithm_choice = argv[2];
+    mpz_class n(inputnum);
+    init_random();
 
-int main(){
-    init_random();  
+    
 
-    mpz_class b("143");
-    dixons(b);
+    long long beforeTime, afterTime;
 
+    if(algorithm_choice == "TRIAL"){
+        beforeTime = getTime();
+        factor = trial_division(n);
+        afterTime = getTime();
+    } else if(algorithm_choice == "FERMAT"){
+        beforeTime = getTime();
+        factor = fermat_factor(n);
+        afterTime = getTime();
+    } else if(algorithm_choice == "DIXON"){
+        beforeTime = getTime();
+        factor = dixons(n);
+        afterTime = getTime();
+    }
 
-
+    // outputs time elapsed in seconds and the factors of n
+    std::cout << (afterTime - beforeTime) / 1000.0 << " " << factor << " " << n/factor << std::endl;
 
 
 /*     for(int i = 0; i < 90; i++){

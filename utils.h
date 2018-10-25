@@ -1,3 +1,5 @@
+#pragma once
+
 #include <gmpxx.h>
 #include <chrono>
 
@@ -6,6 +8,8 @@ typedef std::vector<bool> bool_vector;
 typedef std::vector<int_vector> int_matrix;
 typedef std::vector<mpz_class> mpz_vector;
 typedef std::pair<int_vector, bool> vb_pair;
+
+using namespace std::chrono;
 
 template <typename T> // Takes int_vector or mpz_vector
 void print_vector(const T &x)
@@ -26,11 +30,11 @@ void print_matrix(int_matrix im)
     }
 }
 
-using namespace std::chrono;
-long long get_time_millis(){
+
+long long getTime(){
     return duration_cast< milliseconds >(
     system_clock::now().time_since_epoch()
-).count();
+    ).count();
 }
 
 int BAD = 13764871;
@@ -63,6 +67,29 @@ int_matrix matrix_mod2(int_matrix matrix){
 
 
 }
+
+int_vector sieve_of_eratosthenes(int n){
+    bool_vector a(n+1, true);
+    int_vector primes;
+    for(size_t i = 2; i <= sqrt(n); i++){
+        if(a[i]){
+            for(size_t j = i*i; j <= n; j+=i){
+                a[j] = false;
+            }
+        }
+    }
+
+    for(size_t i = 2; i <= n; i++){
+        if(a[i]) primes.push_back(i);
+    }
+    
+    return primes;
+}
+
+int x = 100000000;
+int_vector primes_under_x = sieve_of_eratosthenes(x);
+
+mpz_class factor;
 
 int_matrix gaussElim(int_matrix matrix){
         

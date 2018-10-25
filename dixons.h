@@ -7,30 +7,6 @@
 
 #include "utils.h"
 
-
-
-int_vector sieve_of_eratosthenes(int n){
-    bool_vector a(n+1, true);
-    int_vector primes;
-    for(size_t i = 2; i <= sqrt(n); i++){
-        if(a[i]){
-            for(size_t j = i*i; j <= n; j+=i){
-                a[j] = false;
-            }
-        }
-    }
-
-    for(size_t i = 2; i <= n; i++){
-        if(a[i]) primes.push_back(i);
-    }
-    
-    return primes;
-}
-
-
-int x = 100000000;
-int_vector primes_under_x = sieve_of_eratosthenes(x);
-
 int_vector generate_primes(int number_of_primes){
 
     int_vector ret;
@@ -40,8 +16,6 @@ int_vector generate_primes(int number_of_primes){
 
     return ret;
 }
-
-
 
 vb_pair factor_smooth(mpz_class n, const int_vector &factor_base, const int &factor_base_size){
     int_vector factors(factor_base_size, 0);
@@ -61,7 +35,6 @@ vb_pair factor_smooth(mpz_class n, const int_vector &factor_base, const int &fac
     return r;
 }
 
-mpz_class n("143");
 
 size_t get_optimal_fb_size(mpz_class n){
     double bound = mpz_sizeinbase(n.get_mpz_t(), 10) - 1; 
@@ -72,9 +45,9 @@ size_t get_optimal_fb_size(mpz_class n){
     return ret;
 }
 
-mpz_class get_factors(int_matrix solutions, const int_vector &factor_base, const mpz_vector &right, const mpz_vector &left){
+mpz_class get_factor(int_matrix solutions, const int_vector &factor_base, const mpz_vector &right, const mpz_vector &left, const mpz_class &n){
     int solution_count = solutions.size();
-    mpz_class a, b;
+    mpz_class a, b, factor;
     a = 1;
     b = 1;
     for(int i = 0; i < solution_count; i++){
@@ -84,23 +57,19 @@ mpz_class get_factors(int_matrix solutions, const int_vector &factor_base, const
                 b = b * right[j];
             }
         }
-        std::cout << gcd(sqrt(a)-sqrt(b), n)  << " " << gcd(sqrt(a)+sqrt(b), n) << std::endl;
+        factor = gcd(sqrt(a)-sqrt(b), n);
+        if(factor != 1 && factor != n) break;
+        
     }
 
-    
+    return factor;
 
 }
 
-mpz_vector dixons(mpz_class n){
-
-    size_t optimal_fb_size = 4*get_optimal_fb_size(n);
-    //std::cout << "optimal_fb_size " << optimal_fb_size << std::endl;
-
-    int_vector factor_base = generate_primes(optimal_fb_size);
-    
+mpz_class dixons(mpz_class n){
+    size_t optimal_fb_size = get_optimal_fb_size(n)*4;
+    int_vector factor_base = generate_primes(optimal_fb_size); 
     int factor_base_size = factor_base.size();
-    //std::cout << "factor_base_size: " << factor_base_size << std::endl << "factor_base: ";
-    //print_vector(factor_base);
 
     int i = 0;
     mpz_class z, z_squared, z_squared_mod_n;
@@ -122,13 +91,7 @@ mpz_vector dixons(mpz_class n){
     }
 
     int_matrix solutions = gaussElim(right_exp);
-/*     print_vector(left);
-    print_vector(right);
-    print_matrix(solutions); */
-    get_factors(solutions, factor_base, right, left);
 
-
-    mpz_vector ret;
-    return ret;
+    return get_factor(solutions, factor_base, right, left, n);
 
 }
