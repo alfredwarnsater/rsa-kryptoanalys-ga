@@ -46,10 +46,15 @@ int main(int argc, char *argv[]){
 
 /*     for(int i = 0; i < 90; i++){
         mpz_class b(rsa_nums[i][2]);
-        long long beforeTime = getTime();
-        
-        long long afterTime = getTime();
-        cout << 10+i << "\t" << (afterTime - beforeTime) / 1000.0 << endl; 
+        beforeTime = getTime();
+        fermat_factor(b);
+        afterTime = getTime();
+        std::cout << 10+i << "\t" << (afterTime - beforeTime) / 1000.0 << "\t";
+        beforeTime = getTime();
+        dixons(b);
+        afterTime = getTime();
+        std::cout << (afterTime - beforeTime) / 1000.0 << std::endl;
+
     } */
 
 }
