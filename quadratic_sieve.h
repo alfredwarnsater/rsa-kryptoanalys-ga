@@ -38,7 +38,7 @@ mpz_class quadratic_sieve(mpz_class N){
     std::vector<std::pair<mpz_class, mpz_class>> tonelli_sols;
     std::vector<std::pair<mpz_class, mpz_class>> next_to_sieve;
 
-    //Generating sieving sequence
+    // Generating sieving sequence of the form: Q(x) = x^2 - N
     mpz_class lower_bound = (root - sieving_interval);
     mpz_class upper_bound = (root + sieving_interval);
 
@@ -47,32 +47,52 @@ mpz_class quadratic_sieve(mpz_class N){
         std::cout << "Q(" << x << ") = " << (x*x - N) << std::endl;
     }
 
-
+    // Generating solutions to the equation s^2 ≡ N (mod p)
     if(sieving_seq[0] % 2 == 0){
-        next_to_sieve.push_back(std::make_pair(lower_bound, lower_bound));
+        tonelli_sols.push_back(std::make_pair(lower_bound, lower_bound));
     } else{
-        next_to_sieve.push_back(std::make_pair(lower_bound+1, lower_bound+1));
+        tonelli_sols.push_back(std::make_pair(lower_bound+1, lower_bound+1));
     }
 
-    //Generating starting positions
     for(int i = 1; i < factor_base.size(); i++){
         mpz_class sol;
         mpz_sqrtm(sol.get_mpz_t(), N.get_mpz_t(), factor_base[i].get_mpz_t());
         tonelli_sols.push_back(std::make_pair(sol, factor_base[i]-sol));
     }
 
-    for(int i = 1; i < tonelli_sols.size(); i++){
-        next_to_sieve.push_back(tonelli_sols[i-1]);
+    for(int i = 0; i < tonelli_sols.size(); i++){
+        next_to_sieve.push_back(tonelli_sols[i]);
         while(next_to_sieve[i].first - factor_base[i] >= lower_bound){
             next_to_sieve[i].first = next_to_sieve[i].first - factor_base[i];
         }
+        while(next_to_sieve[i].second - factor_base[i] >= lower_bound){
+            next_to_sieve[i].second = next_to_sieve[i].second - factor_base[i];
+        }
     }
 
-    for(auto it : factor_base)    std::cout << it << std::endl;
+    for(auto it : sieving_seq)    std::cout << it << std::endl;
+    std::cout << std::endl;
+
+    for(int i = 0; i < next_to_sieve.size(); i++){
+        while(next_to_sieve[i].first <= upper_bound){
+            mpz_class index = next_to_sieve[i].first - lower_bound;
+            std::cout << sieving_seq[index.get_ui()] << " " << factor_base[i] << std::endl;
+            while(sieving_seq[index.get_ui()] % factor_base[i] == 0){
+                sieving_seq[index.get_ui()] = sieving_seq[index.get_ui()] / factor_base[i]; 
+            }
+            next_to_sieve[i].first += factor_base[i];
+        }
+        
+        
+    }
+
+    for(auto it : sieving_seq) std::cout << it << std::endl;
+
+/*     for(auto it : factor_base)    std::cout << it << std::endl;
     std::cout <<  std::endl;
     for(auto it : tonelli_sols)    std::cout << it.first << std::endl;
     std::cout <<  std::endl;
-    for(auto it : next_to_sieve)    std::cout << it.first << std::endl;
+    for(auto it : next_to_sieve)    std::cout << it.first << std::endl; */
 
 
 
