@@ -88,106 +88,74 @@ int_vector sieve_of_eratosthenes(int n){
     return primes;
 }
 
-int x = 100000000;
+int x = 10000000;
 int_vector primes_under_x = sieve_of_eratosthenes(x);
 
 
+int mpz_sqrtm(mpz_t q, const mpz_t n, const mpz_t p) {
+    mpz_t w, n_inv, y;
+    unsigned int i, s;
+      //TMP_DECL;
+      //TMP_MARK;
 
-int tonelli(mpz_t x, mpz_t q, mpz_t n)
-{
-    int                        leg;
-    mpz_t                        tmp,ofac,nr,t,r,c,b;
-    unsigned int            mod4;
-    mp_bitcnt_t                twofac=0,m,i,ix;
+      if(mpz_divisible_p(n, p)) {         /* Is n a multiple of p?            */
+          mpz_set_ui(q, 0);               /* Yes, then the square root is 0.  */
+          return 1;                       /* (special case, not caught        */
+      }                                   /* otherwise)                       */
+      /*if(mpz_legendre(n, p) != 1)         // Not a quadratic residue?         */
+         /* return 0;                       // No, so return error              */
+      if(mpz_tstbit(p, 1) == 1) {         /* p = 3 (mod 4) ?                  */
+          mpz_set(q, p);
+          mpz_add_ui(q, q, 1);
+          mpz_fdiv_q_2exp(q, q, 2);
+          mpz_powm(q, n, q, p);           /* q = n ^ ((p+1) / 4) (mod p)      */
+          return 1;
+      }
+      //MPZ_TMP_INIT(y, 2*SIZ(p));
+      //MPZ_TMP_INIT(w, 2*SIZ(p));
+      //MPZ_TMP_INIT(n_inv, 2*SIZ(p));
+      mpz_init(y);
+      mpz_init(w);
+      mpz_init(n_inv);
 
-    mod4=mpz_tstbit(n,0);
-    if(!mod4) // must be odd
-        return 0;
+      mpz_set(q, p);
+      mpz_sub_ui(q, q, 1);                /* q = p-1                          */
+      s = 0;                              /* Factor out 2^s from q            */
+      while(mpz_tstbit(q, s) == 0) s++;
+      mpz_fdiv_q_2exp(q, q, s);           /* q = q / 2^s                      */
+      mpz_set_ui(w, 2);                   /* Search for a non-residue mod p   */
+      while(mpz_legendre(w, p) != -1)     /* by picking the first w such that */
+          mpz_add_ui(w, w, 1);            /* (w/p) is -1                      */
+      mpz_powm(w, w, q, p);               /* w = w^q (mod p)                  */
+      mpz_add_ui(q, q, 1);
+      mpz_fdiv_q_2exp(q, q, 1);           /* q = (q+1) / 2                    */
+      mpz_powm(q, n, q, p);               /* q = n^q (mod p)                  */
+      mpz_invert(n_inv, n, p);
+      for(;;) {
+          mpz_powm_ui(y, q, 2, p);        /* y = q^2 (mod p)                  */
+          mpz_mul(y, y, n_inv);
+          mpz_mod(y, y, p);               /* y = y * n^-1 (mod p)             */
+          i = 0;
+          while(mpz_cmp_ui(y, 1) != 0) {
+              i++;
+              mpz_powm_ui(y, y, 2, p);    /*  y = y ^ 2 (mod p)               */
+          }
+          if(i == 0) {                    /* q^2 * n^-1 = 1 (mod p), return   */
+              //TMP_FREE;
+        	  mpz_clear(w); mpz_clear(n_inv); mpz_clear(y);
+              return 1;
+          }
+          if(s-i == 1) {                  /* In case the exponent to w is 1,  */
+              mpz_mul(q, q, w);           /* Don't bother exponentiating      */
+          } else {
+              mpz_powm_ui(y, w, 1 << (s-i-1), p);
+              mpz_mul(q, q, y);
+          }
+          mpz_mod(q, q, p);               /* r = r * w^(2^(s-i-1)) (mod p)    */
+      }
 
-    mod4+=2*mpz_tstbit(n,1);
-
-    leg=mpz_legendre(q,n);
-    if(leg!=1)
-        return leg;
-
-    mpz_init_set(tmp,n);
-
-    if(mod4==3) // directly, x = q^(n+1)/4 mod n
-        {
-        mpz_add_ui(tmp,tmp,1UL);
-        mpz_tdiv_q_2exp(tmp,tmp,2);
-        mpz_powm(x,q,tmp,n);
-        mpz_clear(tmp);
-        }
-    else // Tonelli-Shanks
-        {
-        mpz_inits(ofac,t,r,c,b,NULL);
-
-        // split n - 1 into odd number times power of 2 ofac*2^twofac
-        mpz_sub_ui(tmp,tmp,1UL);
-        twofac=mpz_scan1(tmp,twofac); // largest power of 2 divisor
-        if(twofac)
-            mpz_tdiv_q_2exp(ofac,tmp,twofac); // shift right
-
-        // look for non-residue
-        mpz_init_set_ui(nr,2UL);
-        while(mpz_legendre(nr,n)!=-1)
-            mpz_add_ui(nr,nr,1UL);
-
-        mpz_powm(c,nr,ofac,n); // c = nr^ofac mod n
-
-        mpz_add_ui(tmp,ofac,1UL);
-        mpz_tdiv_q_2exp(tmp,tmp,1);
-        mpz_powm(r,q,tmp,n); // r = q^(ofac+1)/2 mod n
-
-        mpz_powm(t,q,ofac,n);
-        mpz_mod(t,t,n); // t = q^ofac mod n
-
-        if(mpz_cmp_ui(t,1UL)!=0) // if t = 1 mod n we're done
-            {
-            m=twofac;
-            do
-                {
-                i=2;
-                ix=1;
-                while(ix<m)
-                    {
-                    // find lowest 0 < ix < m | t^2^ix = 1 mod n
-                    mpz_powm_ui(tmp,t,i,n); // repeatedly square t
-                    if(mpz_cmp_ui(tmp,1UL)==0)
-                        break;
-                    i<<=1; // i = 2, 4, 8, ...
-                    ix++; // ix is log2 i
-                    }
-                mpz_powm_ui(b,c,1<<(m-ix-1),n); // b = c^2^(m-ix-1) mod n
-                mpz_mul(r,r,b);
-                mpz_mod(r,r,n); // r = r*b mod n
-                mpz_mul(c,b,b);
-                mpz_mod(c,c,n); // c = b^2 mod n
-                mpz_mul(t,t,c);
-                mpz_mod(t,t,n); // t = t b^2 mod n
-                m=ix;
-                }while(mpz_cmp_ui(t,1UL)!=0); // while t mod n != 1
-            }
-        mpz_set(x,r);
-        mpz_clears(tmp,ofac,nr,t,r,c,b,NULL);
-        }
-
-    return 1;
-}
-
-mpz_pair tonelli_both_sol(mpz_class n, mpz_class p){
-    mpz_pair ret;
-    mpz_class ret1;
-    mpz_class ret2;
-    tonelli(ret1.get_mpz_t(), n.get_mpz_t(), p.get_mpz_t());
-
-    ret.first = ret1;
-    mpz_neg(ret2.get_mpz_t(), ret1.get_mpz_t());
-    mpz_mod(ret2.get_mpz_t(), ret2.get_mpz_t(), p.get_mpz_t());
-    ret.second = ret2;
-
-    return ret;
+      mpz_clear(w); mpz_clear(n_inv); mpz_clear(y);
+      return 0;
 }
 
 int_matrix gaussElim(int_matrix matrix){

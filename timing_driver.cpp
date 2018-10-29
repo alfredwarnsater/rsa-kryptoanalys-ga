@@ -10,27 +10,31 @@
 #include "fermat_factor.h"
 #include "rsa_numbers/rsa_nums_200.h"
 #include "dixons.h"
-#include "quadratic-sieve.h"
+#include "quadratic_sieve.h"
 
 int main(int argc, char *argv[]){
 
-    std::string inputnum = "122933";
+/*     std::string inputnum = "122933";
     std::string algorithm_choice = "DIXON";
     if(argc >= 2) inputnum = argv[1];
     if(argc >= 3) algorithm_choice = argv[2];
     mpz_class n(inputnum);
     init_random();
 
-    mpz_class factor;
-    mpz_class a("38933443456562398");
-    mpz_class b("415997014371920782955642881");
+    mpz_class factor; */
+    mpz_class a("143");
+    mpz_class b("31");
+    mpz_class c("1000000009");
+
+    mpz_class n("143");
 
     long long beforeTime, afterTime;
     beforeTime = getTime();
-    //mpz_pair mp = tonelli_both_sol(a, b);
-    factor = QS(n);
+    mpz_class tmp = mpz_sqrtm(c.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+    //std::cout << c << std::endl;
+    quadratic_sieve(n);
     afterTime = getTime();
-    //std::cout << (afterTime - beforeTime) / 1000.0 << " " << mp.first << " " << mp.second << std::endl;
+    std::cout << "Time: " << (afterTime - beforeTime) / 1000.0  << std::endl;
 
 
 
