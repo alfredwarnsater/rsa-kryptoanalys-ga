@@ -124,31 +124,14 @@ mpz_class quadratic_sieve(mpz_class N){
     // Generating starting positions
     for(int i = 0; i < tonelli_sols.size(); i++){
         next_to_sieve.push_back(tonelli_sols[i]);
-            
-        if(next_to_sieve[i].first > lower_bound){
-            std::cout << "a" << std::endl;
-            while(next_to_sieve[i].first - factor_base[i] >= lower_bound){
-                next_to_sieve[i].first = next_to_sieve[i].first - factor_base[i];
-            }
-        }
-        if(next_to_sieve[i].second > lower_bound){
-            std::cout << "b" << std::endl;
-            while(next_to_sieve[i].second - factor_base[i] >= lower_bound){
-                next_to_sieve[i].second = next_to_sieve[i].second - factor_base[i];
-            }
-        }        
-        if(next_to_sieve[i].first < lower_bound){
-            std::cout << "c" << std::endl;
-            while(next_to_sieve[i].first < lower_bound){
-                next_to_sieve[i].first = next_to_sieve[i].first + factor_base[i];
-            }
-        }
-        if(next_to_sieve[i].second < lower_bound){
-            std::cout << "d" << std::endl;
-            while(next_to_sieve[i].second < lower_bound){
-                next_to_sieve[i].second = next_to_sieve[i].second + factor_base[i];
-            }
-        }
+        mpz_class x;
+
+        x = (lower_bound + next_to_sieve[i].first)/factor_base[i];
+        next_to_sieve[i].first = next_to_sieve[i].first + x*factor_base[i];
+
+        x = (lower_bound + next_to_sieve[i].second)/factor_base[i];
+        next_to_sieve[i].second = next_to_sieve[i].second + x*factor_base[i];
+        
 
     }
 
