@@ -7,6 +7,7 @@
 typedef std::vector<int> int_vector;
 typedef std::vector<bool> bool_vector;
 typedef std::vector<int_vector> int_matrix;
+typedef std::vector<bool_vector> bool_matrix;
 typedef std::vector<mpz_class> mpz_vector;
 typedef std::pair<int_vector, bool> vb_pair;
 typedef std::pair<mpz_class, mpz_class> mpz_pair;
@@ -23,6 +24,16 @@ void print_vector(const T &x)
 }
 
 void print_matrix(int_matrix im)
+{
+    for(auto it : im){
+        for(auto it2 : it){
+            std::cout << it2 << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
+void print_matrix(bool_matrix im)
 {
     for(auto it : im){
         for(auto it2 : it){
@@ -207,6 +218,56 @@ int_matrix gaussElim(int_matrix matrix){
         return ret;
 
     }
+
+bool_matrix gaussElim(bool_matrix matrix){
+        
+    int n = matrix.size();
+    int m = matrix[0].size();
+    int i, j, k, l, freeCount, solutionCount;
+
+    bool_vector marks(n, 0);
+    int markCount = 0;
+    for(j = 0; j < m; j++){
+        for(i = 0; i < n; i++){
+            if(matrix[i][j] == 1){
+                marks[i] = true;
+                markCount++;
+                for(k = 0; k < m; k++){
+                    if(matrix[i][k] == 1 && k != j){
+                        for(l = 0; l < n; l++){
+                            matrix[l][k] = (matrix[l][k] + matrix[l][j])%2;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    freeCount = n - markCount;
+
+    bool_matrix ret(freeCount, bool_vector(n));
+    solutionCount = 0;
+    for(i = 0; i < n; i++){
+        if(!marks[i]){
+            ret[solutionCount][i] = 1;
+            for(j = 0; j < m; j++){
+                if(matrix[i][j] == 1){
+                    for(l = 0; l < n; l++){
+                        if(matrix[l][j] == 1 && marks[l]){
+                            ret[solutionCount][l] = 1;
+                        }
+                    }
+                }
+            }
+            solutionCount++;
+        }
+    }
+    
+    return ret;
+
+}
+
 
 
 

@@ -26,15 +26,18 @@ int main(int argc, char *argv[]){
     mpz_class b("31");
     mpz_class c("1000000009");
 
-    mpz_class n("143");
+    std::string input;
+    std::cin >> input;
+
+    mpz_class n(input);
 
     long long beforeTime, afterTime;
     beforeTime = getTime();
     mpz_class tmp = mpz_sqrtm(c.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
     //std::cout << c << std::endl;
     quadratic_sieve(n);
-    afterTime = getTime();
-    std::cout << "Time: " << (afterTime - beforeTime) / 1000.0  << std::endl;
+    //afterTime = getTime();
+    //std::cout << "Time: " << (afterTime - beforeTime) / 1000.0  << std::endl;
 
 
 
