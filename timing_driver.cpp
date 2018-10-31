@@ -36,8 +36,8 @@ int main(int argc, char *argv[]){
     mpz_class tmp = mpz_sqrtm(c.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
     //std::cout << c << std::endl;
     quadratic_sieve(n);
-    //afterTime = getTime();
-    //std::cout << "Time: " << (afterTime - beforeTime) / 1000.0  << std::endl;
+    afterTime = getTime();
+    std::cout << "Time: " << (afterTime - beforeTime) / 1000.0  << std::endl;
 
 
 

@@ -9,7 +9,7 @@
 
 mpz_class bound;
 mpz_class root;
-mpz_class min_bound = 1000;
+mpz_class min_bound;
 int sieving_chunk = 10;
 int sieving_interval;
 
@@ -80,7 +80,7 @@ mpz_class quadratic_sieve(mpz_class N){
     mpz_vector x_nums;
     std::vector<std::pair<mpz_class, mpz_class>> tonelli_sols;
     std::vector<std::pair<mpz_class, mpz_class>> next_to_sieve;
-
+    sieving_interval = sieving_interval;
     std::cout << bound << " " << sieving_interval << std::endl;
 
 
@@ -118,8 +118,6 @@ mpz_class quadratic_sieve(mpz_class N){
 
     //for(auto it : tonelli_sols) std::cout << it.first << std::endl;
 
-    std::cout << "hej" << std::endl;
-
 
     // Generating starting positions
     for(int i = 0; i < tonelli_sols.size(); i++){
@@ -134,8 +132,6 @@ mpz_class quadratic_sieve(mpz_class N){
         
 
     }
-
-        std::cout << "hej" << std::endl;
 
 /*     for(auto it : tonelli_sols) std::cout << it.first << " " << it.second << std::endl;
     std::cout << std::endl;
@@ -166,7 +162,6 @@ mpz_class quadratic_sieve(mpz_class N){
             next_to_sieve[i].second+= factor_base[i];
         }
     }
-    std::cout << "hej" << std::endl;
 
     //print_vector(sieving_seq);
 
@@ -191,9 +186,16 @@ mpz_class quadratic_sieve(mpz_class N){
     }
 
     //print_vector(smooth_nums);
+
+
+    std::cout << "exp_matrix_filtered.size(): " << exp_matrix_filtered.size() << std::endl;
     //print_matrix(exp_matrix_filtered);
+    std::cout << "exp_matrix_filtered[0].size(): " << exp_matrix_filtered[0].size() << std::endl;
+
 
     bool_matrix cand_sols = gaussElim(exp_matrix_filtered);
+    std::cout << "cand_sols: " << cand_sols.size() << std::endl;
+
     //print_matrix(cand_sols);
 
     std::cout << get_factor(cand_sols, smooth_nums, xs, N) << std::endl;
