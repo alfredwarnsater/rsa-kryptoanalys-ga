@@ -10,14 +10,13 @@
 mpz_class bound;
 mpz_class root;
 mpz_class min_bound;
-int sieving_chunk = 10;
 int sieving_interval;
 
 mpz_vector gen_factor_base(mpz_class N){
     mpz_vector ret;
 
     int count = 0;
-    while(primes_under_x[count] < bound + min_bound){
+    while(ret.size() < bound + min_bound){
         mpz_class prime = primes_under_x[count];
         if(mpz_legendre(N.get_mpz_t(), prime.get_mpz_t()) == 1){
             ret.push_back(prime);
@@ -77,11 +76,9 @@ mpz_class quadratic_sieve(mpz_class N){
     //print_vector(factor_base);
 
     mpz_vector sieving_seq;
-    mpz_vector x_nums;
     std::vector<std::pair<mpz_class, mpz_class>> tonelli_sols;
     std::vector<std::pair<mpz_class, mpz_class>> next_to_sieve;
-    sieving_interval = sieving_interval;
-    std::cout << bound << " " << sieving_interval << std::endl;
+    std::cout << bound+min_bound << " " << sieving_interval << std::endl;
 
 
     // Generating sieving sequence of the form: Q(x) = x^2 - N
@@ -90,7 +87,6 @@ mpz_class quadratic_sieve(mpz_class N){
 
     for(mpz_class x = lower_bound; x <= upper_bound; x++){
         sieving_seq.push_back(x*x - N);
-        x_nums.push_back(x);
         //std::cout << "Q(" << x << ") = " << (x*x - N) << std::endl;
     }
 
@@ -198,9 +194,8 @@ mpz_class quadratic_sieve(mpz_class N){
 
     //print_matrix(cand_sols);
 
-    std::cout << get_factor(cand_sols, smooth_nums, xs, N) << std::endl;
 
 
-
+    return get_factor(cand_sols, smooth_nums, xs, N);
 
 }

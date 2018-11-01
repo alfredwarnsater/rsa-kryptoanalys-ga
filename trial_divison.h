@@ -1,4 +1,4 @@
-
+/* 
 mpz_class trial_division(mpz_class n){
     mpz_class factor("1");
     mpz_class f = 3;
@@ -11,4 +11,4 @@ mpz_class trial_division(mpz_class n){
         }
     }
     return factor;
-}
+} */
