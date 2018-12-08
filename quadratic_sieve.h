@@ -78,7 +78,7 @@ mpz_class quadratic_sieve(mpz_class N){
     mpz_vector sieving_seq;
     std::vector<std::pair<mpz_class, mpz_class>> tonelli_sols;
     std::vector<std::pair<mpz_class, mpz_class>> next_to_sieve;
-    std::cout << bound+min_bound << " " << sieving_interval << std::endl;
+    //std::cout << bound+min_bound << " " << sieving_interval << std::endl;
 
 
     // Generating sieving sequence of the form: Q(x) = x^2 - N
@@ -184,13 +184,13 @@ mpz_class quadratic_sieve(mpz_class N){
     //print_vector(smooth_nums);
 
 
-    std::cout << "exp_matrix_filtered.size(): " << exp_matrix_filtered.size() << std::endl;
+    //std::cout << "exp_matrix_filtered.size(): " << exp_matrix_filtered.size() << std::endl;
     //print_matrix(exp_matrix_filtered);
-    std::cout << "exp_matrix_filtered[0].size(): " << exp_matrix_filtered[0].size() << std::endl;
+    //std::cout << "exp_matrix_filtered[0].size(): " << exp_matrix_filtered[0].size() << std::endl;
 
 
     bool_matrix cand_sols = gaussElim(exp_matrix_filtered);
-    std::cout << "cand_sols: " << cand_sols.size() << std::endl;
+    //std::cout << "cand_sols: " << cand_sols.size() << std::endl;
 
     //print_matrix(cand_sols);
 

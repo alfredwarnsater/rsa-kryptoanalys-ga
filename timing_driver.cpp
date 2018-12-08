@@ -13,16 +13,16 @@
 #include "quadratic_sieve.h"
 
 int main(int argc, char *argv[]){
-
+init_random();
 /*     std::string inputnum = "122933";
     std::string algorithm_choice = "DIXON";
     if(argc >= 2) inputnum = argv[1];
     if(argc >= 3) algorithm_choice = argv[2];
     mpz_class n(inputnum);
-    init_random();
+    
 
     mpz_class factor; */
-    mpz_class a("143");
+/*     mpz_class a("143");
     mpz_class b("31");
     mpz_class c("1000000009");
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
     mpz_class factor = quadratic_sieve(n);
     std::cout << factor << std::endl;
     afterTime = getTime();
-    std::cout << "Time: " << (afterTime - beforeTime) / 1000.0  << std::endl;
+    std::cout << "Time: " << (afterTime - beforeTime) / 1000.0  << std::endl; */
 
 
 
@@ -55,23 +55,20 @@ int main(int argc, char *argv[]){
         beforeTime = getTime();
         factor = dixons(n);
         afterTime = getTime();
-    }
+    } */
 
     // outputs time elapsed in seconds and the factors of n
-    std::cout << (afterTime - beforeTime) / 1000.0 << " " << factor << " " << n/factor << std::endl;
+    //std::cout << (afterTime - beforeTime) / 1000.0 << " " << factor << " " << n/factor << std::endl;
 
-
+    long long beforeTime, afterTime;
+    beforeTime = getTime();
     for(int i = 0; i < 90; i++){
         mpz_class b(rsa_nums[i][2]);
         beforeTime = getTime();
-        fermat_factor(b);
-        afterTime = getTime();
-        std::cout << 10+i << "\t" << (afterTime - beforeTime) / 1000.0 << "\t";
-        beforeTime = getTime();
         dixons(b);
         afterTime = getTime();
-        std::cout << (afterTime - beforeTime) / 1000.0 << std::endl;
+        std::cout << 10+i << "\t" << (afterTime - beforeTime) / 1000.0 << std::endl;
 
     }
- */
+
 }

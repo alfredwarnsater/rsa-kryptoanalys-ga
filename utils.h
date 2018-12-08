@@ -12,6 +12,7 @@ typedef std::vector<mpz_class> mpz_vector;
 typedef std::pair<int_vector, bool> vb_pair;
 typedef std::pair<mpz_class, mpz_class> mpz_pair;
 
+
 using namespace std::chrono;
 
 template <typename T> // Takes int_vector or mpz_vector
